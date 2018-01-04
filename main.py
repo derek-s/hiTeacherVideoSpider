@@ -24,7 +24,7 @@ from pprint import pprint
 import time
 
 #数据库连接
-db = MySQLdb.connect("192.168.10.105","root","123a+-","ssxy")
+db = MySQLdb.connect()
 c = db.cursor()
 db.set_character_set('utf8')
 #初始化colorama
@@ -99,7 +99,7 @@ def VideoMain(FirstID,EndID):
             FirstID += 1
             continue
         else:
-            u = 'http://www.hiteacher.com.cn/%s'%FirstID
+            u = 'http://www.hiteacher.com.cn/elite_course/player/video_list?lesson_id=%s'%FirstID
             print '检测ID：',FirstID
             print '检测URL：',u
             html = TimeOutTest(u).read() #重复ID检测，返回urlopen
@@ -160,7 +160,7 @@ def Unused():
     print json.dumps(videolist,encoding='utf-8',ensure_ascii=False,indent=1)
 
 def Unusedid(Unid):
-    u = 'http://www.hiteacher.com.cn/%s' % Unid
+    u = 'http://www.hiteacher.com.cn/elite_course/player/video_list?lesson_id=%s' % Unid
     print '检测ID：',Unid
     print '检测URL：',u
     html = TimeOutTest(u).read() #重复ID检测，返回urlopen
@@ -227,8 +227,11 @@ def Download(url,path,name):
     file_size_dl = 0
     block_size = 8192
     #progress = ProgressBar().start()
-    widgets = [progressbar.Percentage(), progressbar.Bar()]
-    bar = progressbar.ProgressBar(widgets=widgets, max_value=100).start()
+    widgets = [progressbar.Percentage(),
+                ' ', progressbar.Bar(marker="#", left='[', right=']'),
+                ' ', progressbar.ETA(),
+                ' ', progressbar.FileTransferSpeed()]
+    bar = progressbar.ProgressBar(widgets=widgets, maxval=100).start()
     while True:
         buffer = u.read(block_size)
         if not buffer:
@@ -284,7 +287,7 @@ elif(operate == 3):
     log = f.read()
     lastid = log
     f.close
-    d_path = '/home/derek/ssxy_video/'
+    d_path = '/mnt/d/'
     print '-----------------------------------------------------------'
     print '-                      视频下载                            -'
     print '-----------------------------------------------------------'
